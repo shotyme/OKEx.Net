@@ -97,4 +97,7 @@ public class OkexOrder
 
     [JsonProperty("rebate")]
     public decimal? Rebate { get; set; }
+
+    [JsonProperty("reduceOnly")]
+    public bool ReduceOnly { get; set; }
 }
