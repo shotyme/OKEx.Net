@@ -82,7 +82,7 @@ public partial class OkexClient
             {"posSide", JsonConvert.SerializeObject(positionSide, new PositionSideConverter(false)) },
             {"ordType", JsonConvert.SerializeObject(orderType, new OrderTypeConverter(false)) },
             {"sz", size.ToString(OkexGlobals.OkexCultureInfo) },
-            {"tag", "538a3965e538BCDE" },
+            //{"tag", "538a3965e538BCDE" },
         };
         parameters.AddOptionalParameter("px", price?.ToString(OkexGlobals.OkexCultureInfo));
         parameters.AddOptionalParameter("ccy", currency);
@@ -93,7 +93,16 @@ public partial class OkexClient
 
         var result = await UnifiedApi.ExecuteAsync<OkexRestApiResponse<IEnumerable<OkexOrderPlaceResponse>>>(UnifiedApi.GetUri(Endpoints_V5_Trade_Order), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (!result.Success) return result.AsError<OkexOrderPlaceResponse>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));
-        if (result.Data.ErrorCode > 0) return result.AsError<OkexOrderPlaceResponse>(new OkexRestApiError(result.Data.ErrorCode, result.Data.ErrorMessage, null));
+        if (result.Data.ErrorCode > 0)
+        {
+            var detailed = result.Data.Data.FirstOrDefault();
+            if (detailed != null)
+            {
+                return result.AsError<OkexOrderPlaceResponse>(new OkexRestApiError(Convert.ToInt32(detailed.Code), detailed.Message, null));
+            }
+
+            return result.AsError<OkexOrderPlaceResponse>(new OkexRestApiError(result.Data.ErrorCode, result.Data.ErrorMessage, null));
+        }
 
         return result.As(result.Data.Data.FirstOrDefault());
     }
