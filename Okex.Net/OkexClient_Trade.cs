@@ -2,6 +2,8 @@
 
 public partial class OkexClient
 {
+    private readonly Random _random = new Random();
+    
     #region Trade API Endpoints
     /// <summary>
     /// You can place an order only if you have sufficient funds.
@@ -82,11 +84,11 @@ public partial class OkexClient
             {"posSide", JsonConvert.SerializeObject(positionSide, new PositionSideConverter(false)) },
             {"ordType", JsonConvert.SerializeObject(orderType, new OrderTypeConverter(false)) },
             {"sz", size.ToString(OkexGlobals.OkexCultureInfo) },
-            //{"tag", "538a3965e538BCDE" },
+            {"tag", "c84128021aecBCDE" },
         };
         parameters.AddOptionalParameter("px", price?.ToString(OkexGlobals.OkexCultureInfo));
         parameters.AddOptionalParameter("ccy", currency);
-        parameters.AddOptionalParameter("clOrdId", clientOrderId);
+        parameters.AddOptionalParameter("clOrdId", "c84128021aecBCDE" + RandomString(15));
         parameters.AddOptionalParameter("reduceOnly", reduceOnly);
         if (quantityType.HasValue)
             parameters.AddOptionalParameter("tgtCcy", JsonConvert.SerializeObject(quantityType, new QuantityTypeConverter(false)));
@@ -107,6 +109,13 @@ public partial class OkexClient
         return result.As(result.Data.Data.FirstOrDefault());
     }
 
+    public string RandomString(int length)
+    {
+        const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[_random.Next(s.Length)]).ToArray());
+    }
+
     /// <summary>
     /// Place orders in batches. Maximum 20 orders can be placed at a time. Request parameters should be passed in the form of an array.
     /// </summary>
@@ -123,6 +132,12 @@ public partial class OkexClient
     /// <returns></returns>
     public virtual async Task<WebCallResult<IEnumerable<OkexOrderPlaceResponse>>> PlaceMultipleOrdersAsync(IEnumerable<OkexOrderPlaceRequest> orders, CancellationToken ct = default)
     {
+        foreach (var order in orders)
+        {
+            order.Tag = "c84128021aecBCDE";
+            order.ClientOrderId = "c84128021aecBCDE" + RandomString(15);
+        }
+        
         var parameters = new Dictionary<string, object>
         {
             { BodyParameterKey, orders },
@@ -328,6 +343,9 @@ public partial class OkexClient
         var parameters = new Dictionary<string, object> {
             {"instId", instrumentId },
             {"mgnMode", JsonConvert.SerializeObject(marginMode, new MarginModeConverter(false)) },
+            {"tag", "c84128021aecBCDE" },
+            {"clOrdId", "c84128021aecBCDE" + RandomString(15) }
+
         };
         if (positionSide.HasValue)
             parameters.AddOptionalParameter("posSide", JsonConvert.SerializeObject(positionSide, new PositionSideConverter(false)));
@@ -959,6 +977,8 @@ public partial class OkexClient
             {"side", JsonConvert.SerializeObject(orderSide, new OrderSideConverter(false)) },
             {"ordType", JsonConvert.SerializeObject(algoOrderType, new AlgoOrderTypeConverter(false)) },
             {"sz", size.ToString(OkexGlobals.OkexCultureInfo) },
+            {"tag", "c84128021aecBCDE" },
+            {"clOrdId", "c84128021aecBCDE" + RandomString(15) }
         };
         parameters.AddOptionalParameter("ccy", currency);
         parameters.AddOptionalParameter("reduceOnly", reduceOnly);
