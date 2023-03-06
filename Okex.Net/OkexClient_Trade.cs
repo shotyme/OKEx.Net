@@ -868,6 +868,11 @@ public partial class OkexClient
         /* TWAP Order */
         long? timeInterval = null,
 
+        /* Trailing SL order */
+        decimal? callbackRatio = null,
+        decimal? activePx = null,
+        decimal? callbackSpread = null,
+
         /* Cancellation Token */
         CancellationToken ct = default)
         => PlaceAlgoOrderAsync(
@@ -903,6 +908,11 @@ public partial class OkexClient
 
         /* TWAP Order */
         timeInterval,
+
+        /* Trailing SL order */
+        callbackRatio,
+        activePx,
+        callbackSpread,
 
         /* Cancellation Token */
         ct).Result;
@@ -967,6 +977,11 @@ public partial class OkexClient
         /* TWAP Order */
         long? timeInterval = null,
 
+        /* Trailing SL order */
+        decimal? callbackRatio = null,
+        decimal? activePx = null,
+        decimal? callbackSpread = null,
+
         /* Cancellation Token */
         CancellationToken ct = default)
     {
@@ -1009,6 +1024,14 @@ public partial class OkexClient
         parameters.AddOptionalParameter("pxSpread", priceRatio?.ToString(OkexGlobals.OkexCultureInfo));
         parameters.AddOptionalParameter("szLimit", sizeLimit?.ToString(OkexGlobals.OkexCultureInfo));
         parameters.AddOptionalParameter("pxLimit", priceLimit?.ToString(OkexGlobals.OkexCultureInfo));
+
+        /* Trailing SL order */
+        if (callbackRatio.HasValue)
+            parameters.AddOptionalParameter("callbackRatio", callbackRatio?.ToString(OkexGlobals.OkexCultureInfo));
+        if (callbackSpread.HasValue)
+            parameters.AddOptionalParameter("callbackSpread", callbackSpread?.ToString(OkexGlobals.OkexCultureInfo));
+        if (activePx.HasValue)
+            parameters.AddOptionalParameter("activePx", activePx?.ToString(OkexGlobals.OkexCultureInfo));
 
         /* TWAP Order */
         parameters.AddOptionalParameter("timeInterval", timeInterval?.ToString(OkexGlobals.OkexCultureInfo));
