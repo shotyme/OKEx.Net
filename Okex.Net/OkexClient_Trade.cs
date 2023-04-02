@@ -147,7 +147,7 @@ public partial class OkexClient
         if (!result.Success) return result.AsError<IEnumerable<OkexOrderPlaceResponse>>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));
         if (result.Data.ErrorCode > 0)
         {
-            var detailed = result.Data.Data.FirstOrDefault();
+            var detailed = result.Data.Data.FirstOrDefault(x => x.Code != "0");
             if (detailed != null)
             {
                 return result.AsError<IEnumerable<OkexOrderPlaceResponse>>(new OkexRestApiError(Convert.ToInt32(detailed.Code), detailed.Message, null));
