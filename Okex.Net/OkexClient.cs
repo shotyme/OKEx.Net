@@ -229,7 +229,7 @@ public class OkexClientUnifiedApi : RestApiClient
     public override TimeSyncInfo GetTimeSyncInfo()
         => new TimeSyncInfo(_log, _options.UnifiedApiOptions.AutoTimestamp, _options.UnifiedApiOptions.TimestampRecalculationInterval, TimeSyncState);
 
-    public override TimeSpan GetTimeOffset()
+    public override TimeSpan? GetTimeOffset()
         => TimeSyncState.TimeOffset;
 
     protected override void WriteParamBody(IRequest request, SortedDictionary<string, object> parameters, string contentType)
