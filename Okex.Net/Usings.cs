@@ -2,7 +2,6 @@
 global using CryptoExchange.Net.Authentication;
 global using CryptoExchange.Net.Converters;
 global using CryptoExchange.Net.Interfaces;
-global using CryptoExchange.Net.Logging;
 global using CryptoExchange.Net.Objects;
 global using CryptoExchange.Net.Sockets;
 global using Microsoft.Extensions.Logging;

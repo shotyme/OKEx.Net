@@ -1,6 +1,8 @@
-﻿namespace Okex.Net.Objects.Core;
+﻿using CryptoExchange.Net.Objects.Options;
 
-public class OkexSocketClientOptions : ClientOptions
+namespace Okex.Net.Objects.Core;
+
+public class OkexSocketClientOptions : SocketExchangeOptions
 {
     public bool DemoTradingService { get; set; } = false;
 
@@ -27,7 +29,7 @@ public class OkexSocketClientOptions : ClientOptions
     {
     }
 
-    internal OkexSocketClientOptions(OkexSocketClientOptions baseOn) : base(baseOn)
+    internal OkexSocketClientOptions(OkexSocketClientOptions baseOn)
     {
         if (baseOn == null)
             return;
@@ -37,7 +39,7 @@ public class OkexSocketClientOptions : ClientOptions
     }
 }
 
-public class OkexSocketApiClientOptions : SocketApiClientOptions
+public class OkexSocketApiClientOptions : SocketApiOptions
 {
     public new OkexApiCredentials ApiCredentials
     {
@@ -49,7 +51,7 @@ public class OkexSocketApiClientOptions : SocketApiClientOptions
     {
     }
 
-    internal OkexSocketApiClientOptions(OkexSocketApiClientOptions baseOn, OkexSocketApiClientOptions newValues) : base(baseOn, newValues)
+    internal OkexSocketApiClientOptions(OkexSocketApiClientOptions baseOn, OkexSocketApiClientOptions newValues)
     {
         ApiCredentials = (OkexApiCredentials)newValues?.ApiCredentials?.Copy() ?? (OkexApiCredentials)baseOn.ApiCredentials?.Copy();
     }

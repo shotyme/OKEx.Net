@@ -1,6 +1,8 @@
-﻿namespace Okex.Net.Objects.Core;
+﻿using CryptoExchange.Net.Objects.Options;
 
-public class OkexClientOptions : ClientOptions
+namespace Okex.Net.Objects.Core;
+
+public class OkexClientOptions : RestExchangeOptions
 {
     public bool DemoTradingService { get; set; } = false;
     public bool SignPublicRequests { get; set; } = false;
@@ -33,7 +35,7 @@ public class OkexClientOptions : ClientOptions
     {
     }
 
-    internal OkexClientOptions(OkexClientOptions baseOn) : base(baseOn)
+    internal OkexClientOptions(OkexClientOptions baseOn)
     {
         if (baseOn == null)
             return;
@@ -46,7 +48,7 @@ public class OkexClientOptions : ClientOptions
     }
 }
 
-public class OkexRestApiClientOptions : RestApiClientOptions
+public class OkexRestApiClientOptions : RestApiOptions
 {
     public new OkexApiCredentials ApiCredentials
     {
@@ -58,11 +60,11 @@ public class OkexRestApiClientOptions : RestApiClientOptions
     {
     }
 
-    internal OkexRestApiClientOptions(string baseAddress) : base(baseAddress)
+    internal OkexRestApiClientOptions(string baseAddress) 
     {
     }
 
-    internal OkexRestApiClientOptions(OkexRestApiClientOptions baseOn, OkexRestApiClientOptions newValues) : base(baseOn, newValues)
+    internal OkexRestApiClientOptions(OkexRestApiClientOptions baseOn, OkexRestApiClientOptions newValues)
     {
         ApiCredentials = (OkexApiCredentials)newValues?.ApiCredentials?.Copy() ?? (OkexApiCredentials)baseOn.ApiCredentials?.Copy();
     }

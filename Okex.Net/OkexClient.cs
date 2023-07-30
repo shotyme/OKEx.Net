@@ -141,10 +141,11 @@ public partial class OkexClient : BaseRestClient
     {
     }
 
-    public OkexClient(OkexClientOptions options) : base("OKX Rest Api", options)
+    public OkexClient(OkexClientOptions options) : base(null, "OKX Rest Api")
     {
         Options = options;
-        UnifiedApi = AddApiClient(new OkexClientUnifiedApi(log, this, options));
+        Initialize(options);
+        UnifiedApi = AddApiClient(new OkexClientUnifiedApi(_logger, this, options));
     }
     #endregion
 
@@ -183,16 +184,18 @@ public partial class OkexClient : BaseRestClient
 public class OkexClientUnifiedApi : RestApiClient
 {
     #region Internal Fields
+
+    private readonly ILogger _log;
     internal readonly OkexClient _baseClient;
     internal readonly OkexClientOptions _options;
     internal static TimeSyncState TimeSyncState = new TimeSyncState("Unified Api");
     #endregion
 
-    internal OkexClientUnifiedApi(Log log, OkexClient baseClient, OkexClientOptions options) : base(log, options, options.UnifiedApiOptions)
+    internal OkexClientUnifiedApi(ILogger log, OkexClient baseClient, OkexClientOptions options) : base(log, null, OkexApiAddresses.Default.UnifiedAddress, options, options.UnifiedApiOptions)
     {
+        _log = log;
         _baseClient = baseClient;
         _options = options;
-        _log = log;
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
@@ -227,7 +230,7 @@ public class OkexClientUnifiedApi : RestApiClient
          => _baseClient.GetSystemTimeAsync();
 
     public override TimeSyncInfo GetTimeSyncInfo()
-        => new TimeSyncInfo(_log, _options.UnifiedApiOptions.AutoTimestamp, _options.UnifiedApiOptions.TimestampRecalculationInterval, TimeSyncState);
+        => new TimeSyncInfo(_log, _options.UnifiedApiOptions.AutoTimestamp != null && _options.UnifiedApiOptions.AutoTimestamp.Value, (ApiOptions.TimestampRecalculationInterval ?? ClientOptions.TimestampRecalculationInterval), TimeSyncState);
 
     public override TimeSpan? GetTimeOffset()
         => TimeSyncState.TimeOffset;

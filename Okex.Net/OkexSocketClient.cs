@@ -1,5 +1,4 @@
-﻿using CryptoExchange.Net.Logging;
-using System.Net;
+﻿
 
 namespace Okex.Net;
 
@@ -15,7 +14,12 @@ public partial class OkexSocketClient : BaseSocketClient
     {
     }
 
-    public OkexSocketClient(OkexSocketClientOptions options) : base("OKX Websocket Api", options)
+    public OkexSocketClient(OkexSocketClientOptions options) : base(null, "OKX Websocket Api")
+    {
+        UnifiedSocket = AddApiClient(new OkexSocketClientUnifiedSocket(null, this, options));
+    }
+
+    public OkexSocketClient(OkexSocketClientOptions options, ILogger log) : base(null, "OKX Websocket Api")
     {
         UnifiedSocket = AddApiClient(new OkexSocketClientUnifiedSocket(log, this, options));
     }
@@ -53,15 +57,17 @@ public partial class OkexSocketClient : BaseSocketClient
 public class OkexSocketClientUnifiedSocket : SocketApiClient
 {
     #region Internal Fields
+
+    private readonly ILogger _logger;
     internal readonly OkexSocketClient _baseClient;
     internal bool IsAuthendicated { get; private set; }
     internal OkexApiCredentials _credentials { get; private set; }
     internal OkexSocketClientOptions _options { get; private set; }
     #endregion
 
-    internal OkexSocketClientUnifiedSocket(Log log, OkexSocketClient baseClient, OkexSocketClientOptions options) : base(log, options, options.UnifiedStreamsOptions)
+    internal OkexSocketClientUnifiedSocket(ILogger logger, OkexSocketClient baseClient, OkexSocketClientOptions options) : base(logger, OkexApiAddresses.Default.UnifiedAddress, options, options.UnifiedStreamsOptions)
     {
-        _log = log;
+        _logger = logger;
         _baseClient = baseClient;
         _options = options;
         _credentials = options.ApiCredentials;
@@ -76,7 +82,7 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
     public void SetApiCredentials(OkexApiCredentials credentials)
     {
         _credentials = credentials;
-        Options.ApiCredentials = credentials;
+        _options.ApiCredentials = credentials;
         this.SetApiCredentials((ApiCredentials)credentials);
     }
 
@@ -85,7 +91,7 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
         var credentials = new OkexApiCredentials(apiKey, apiSecret, passPhrase);
 
         _credentials = credentials;
-        Options.ApiCredentials = credentials;
+        _options.ApiCredentials = credentials;
         this.SetApiCredentials((ApiCredentials)credentials);
     }
 
@@ -165,18 +171,18 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
             var authResponse = Deserialize<OkexSocketResponse>(data);
             if (!authResponse)
             {
-                _log.Write(LogLevel.Warning, "Authorization failed: " + authResponse.Error);
+                _logger.LogWarning("Authorization failed: " + authResponse.Error);
                 result = new CallResult<bool>(authResponse.Error);
                 return true;
             }
             if (!authResponse.Data.Success)
             {
-                _log.Write(LogLevel.Warning, "Authorization failed: " + authResponse.Error.Message);
+                _logger.LogWarning("Authorization failed: " + authResponse.Error.Message);
                 result = new CallResult<bool>(new ServerError(authResponse.Error.Code.Value, authResponse.Error.Message));
                 return true;
             }
 
-            _log.Write(LogLevel.Debug, "Authorization completed");
+            _logger.LogDebug("Authorization completed");
             result = new CallResult<bool>(true);
             IsAuthendicated = true;
             return true;
@@ -198,7 +204,7 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
         // Check for Error
         if (data is JObject && data["event"] != null && (string)data["event"]! == "error" && data["code"] != null && data["msg"] != null)
         {
-            _log.Write(LogLevel.Warning, "Query failed: " + (string)data["msg"]!);
+            _logger.LogWarning("Query failed: " + (string)data["msg"]!);
             callResult = new CallResult<T>(new ServerError($"{(string)data["code"]!}, {(string)data["msg"]!}"));
             return true;
         }
@@ -209,7 +215,7 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
             var desResult = Deserialize<T>(data);
             if (!desResult)
             {
-                _log.Write(LogLevel.Warning, $"Failed to deserialize data: {desResult.Error}. Data: {data}");
+                _logger.LogWarning($"Failed to deserialize data: {desResult.Error}. Data: {data}");
                 return false;
             }
 
@@ -233,7 +239,7 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
         // 30040: {0} Channel : {1} doesn't exist
         if (message.HasValues && message["event"] != null && (string)message["event"]! == "error" && message["errorCode"] != null && (string)message["errorCode"]! == "30040")
         {
-            _log.Write(LogLevel.Warning, "Subscription failed: " + (string)message["message"]!);
+            _logger.LogWarning("Subscription failed: " + (string)message["message"]!);
             callResult = new CallResult<object>(new ServerError($"{(string)message["errorCode"]!}, {(string)message["message"]!}"));
             return true;
         }
@@ -245,7 +251,7 @@ public class OkexSocketClientUnifiedSocket : SocketApiClient
             {
                 if (socRequest.Arguments.FirstOrDefault().Channel == (string)message["arg"]["channel"]!)
                 {
-                    _log.Write(LogLevel.Debug, "Subscription completed");
+                    _logger.LogWarning("Subscription completed");
                     callResult = new CallResult<object>(true);
                     return true;
                 }

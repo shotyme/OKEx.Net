@@ -26,7 +26,7 @@ public class OkexAuthenticationProvider : AuthenticationProvider
             return;
 
         // Check Point
-        if (Credentials == null || Credentials.Key == null || Credentials.Secret == null || ((OkexApiCredentials)Credentials).PassPhrase == null)
+        if (_credentials == null || _credentials.Key == null || _credentials.Secret == null || ((OkexApiCredentials)_credentials).PassPhrase == null)
             throw new ArgumentException("No valid API credentials provided. Key/Secret/PassPhrase needed.");
 
         // Set Parameters
@@ -50,10 +50,10 @@ public class OkexAuthenticationProvider : AuthenticationProvider
         var signature = Base64Encode(encryptor.ComputeHash(Encoding.UTF8.GetBytes(signtext)));
 
         // Headers
-        headers.Add("OK-ACCESS-KEY", Credentials.Key.GetString());
+        headers.Add("OK-ACCESS-KEY", _credentials.Key.GetString());
         headers.Add("OK-ACCESS-SIGN", signature);
         headers.Add("OK-ACCESS-TIMESTAMP", time);
-        headers.Add("OK-ACCESS-PASSPHRASE", ((OkexApiCredentials)Credentials).PassPhrase.GetString());
+        headers.Add("OK-ACCESS-PASSPHRASE", ((OkexApiCredentials)_credentials).PassPhrase.GetString());
 
         // Demo Trading Flag
         if (baseClient.Options.DemoTradingService)
