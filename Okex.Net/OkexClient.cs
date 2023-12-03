@@ -260,7 +260,7 @@ public class OkexClientUnifiedApi : RestApiClient
         }
     }
 
-    protected override Error ParseErrorResponse(JToken error)
+    protected Error ParseErrorResponse(JToken error)
     {
         if (error["code"] == null || error["msg"] == null)
             return new ServerError(error.ToString());
