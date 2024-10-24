@@ -1,4 +1,6 @@
-﻿namespace Okex.Net.Objects.Trading;
+﻿using CryptoExchange.Net.Converters.JsonNet;
+
+namespace Okex.Net.Objects.Trading;
 
 [JsonConverter(typeof(ArrayConverter))]
 public class OkexInterestVolumeExpiry

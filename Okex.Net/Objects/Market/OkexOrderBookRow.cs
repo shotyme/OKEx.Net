@@ -1,4 +1,6 @@
-﻿namespace Okex.Net.Objects.Market;
+﻿using CryptoExchange.Net.Converters.JsonNet;
+
+namespace Okex.Net.Objects.Market;
 
 [JsonConverter(typeof(ArrayConverter))]
 public class OkexOrderBookRow

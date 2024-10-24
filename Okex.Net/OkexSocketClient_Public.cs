@@ -1,4 +1,6 @@
-﻿namespace Okex.Net;
+﻿using CryptoExchange.Net.Objects.Sockets;
+
+namespace Okex.Net;
 
 public partial class OkexSocketClient
 {
@@ -19,14 +21,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToInstrumentsAsync(OkexInstrumentType instrumentType, Action<OkexInstrument> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexInstrument>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "instruments", instrumentType);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -44,14 +39,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToTickersAsync(string intrumentId, Action<OkexTicker> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexTicker>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "tickers", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -70,14 +58,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToInterestsAsync(string intrumentId, Action<OkexOpenInterest> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexOpenInterest>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "open-interest", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -98,18 +79,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToCandlesticksAsync(string intrumentId, OkexPeriod period, Action<OkexCandlestick> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexCandlestick>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-            {
-                d.Instrument = intrumentId;
-                onData(d);
-            }
-        });
-
-        var jc = JsonConvert.SerializeObject(period, new PeriodConverter(false));
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "candle" + jc, intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -128,14 +98,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToTradesAsync(string intrumentId, Action<OkexTrade> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexTrade>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "trades", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -158,14 +121,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToEstimatedPriceAsync(OkexInstrumentType instrumentType, string underlying, Action<OkexEstimatedPrice> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexEstimatedPrice>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "estimated-price", instrumentType, underlying);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -184,14 +140,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToMarkPriceAsync(string intrumentId, Action<OkexMarkPrice> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexMarkPrice>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "mark-price", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -212,18 +161,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToMarkPriceCandlesticksAsync(string intrumentId, OkexPeriod period, Action<OkexCandlestick> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexCandlestick>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-            {
-                d.Instrument = intrumentId;
-                onData(d);
-            }
-        });
-
-        var jc = JsonConvert.SerializeObject(period, new PeriodConverter(false));
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "mark-price-candle" + jc, intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -242,14 +180,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToPriceLimitAsync(string intrumentId, Action<OkexLimitPrice> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexLimitPrice>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "price-limit", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -280,19 +211,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookAsync(string intrumentId, OkexOrderBookType orderBookType, Action<OkexOrderBook> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexOrderBookUpdate>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-            {
-                d.Instrument = intrumentId;
-                d.Action = data.Data.Action;
-                onData(d);
-            }
-        });
-
-        var jc = JsonConvert.SerializeObject(orderBookType, new OrderBookTypeConverter(false));
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, jc, intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -311,14 +230,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToOptionSummaryAsync(string underlying, Action<OkexOptionSummary> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexOptionSummary>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "opt-summary", string.Empty, underlying);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -337,14 +249,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToFundingRatesAsync(string intrumentId, Action<OkexFundingRate> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexFundingRate>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "funding-rate", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -365,18 +270,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToIndexCandlesticksAsync(string intrumentId, OkexPeriod period, Action<OkexCandlestick> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexCandlestick>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-            {
-                d.Instrument = intrumentId;
-                onData(d);
-            }
-        });
-
-        var jc = JsonConvert.SerializeObject(period, new PeriodConverter(false));
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "index-candle" + jc, intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -395,14 +289,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToIndexTickersAsync(string intrumentId, Action<OkexIndexTicker> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexIndexTicker>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "index-tickers", intrumentId);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -419,14 +306,7 @@ public partial class OkexSocketClient
     /// <returns></returns>
     public virtual async Task<CallResult<UpdateSubscription>> SubscribeToSystemStatusAsync(Action<OkexStatus> onData, CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexStatus>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "status", string.Empty, string.Empty);
-        return await UnifiedSubscribeAsync(request, null, false, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     // TODO: Public structure block trades channel

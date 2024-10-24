@@ -1,4 +1,6 @@
-﻿namespace Okex.Net;
+﻿using CryptoExchange.Net.Objects.Sockets;
+
+namespace Okex.Net;
 
 public partial class OkexSocketClient
 {
@@ -20,14 +22,7 @@ public partial class OkexSocketClient
         Action<OkexAccountBalance> onData,
         CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexAccountBalance>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "account");
-        return await UnifiedSubscribeAsync(request, null, true, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -59,20 +54,7 @@ public partial class OkexSocketClient
         Action<OkexPosition> onData,
         CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexPosition>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, new OkexSocketRequestArgument
-        {
-            Channel = "positions",
-            InstrumentId = instrumentId,
-            InstrumentType = instrumentType,
-            Underlying = underlying,
-        });
-        return await UnifiedSubscribeAsync(request, null, true, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -92,14 +74,7 @@ public partial class OkexSocketClient
         Action<OkexPositionRisk> onData,
         CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexPositionRisk>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, "balance_and_position");
-        return await UnifiedSubscribeAsync(request, null, true, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -131,21 +106,7 @@ public partial class OkexSocketClient
         Action<OkexOrder> onData,
         CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexOrder>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, new OkexSocketRequestArgument
-        {
-            Channel = "orders",
-            InstrumentId = instrumentId,
-            InstrumentType = instrumentType,
-            Underlying = underlying,
-        });
-        return await UnifiedSubscribeAsync(request, null, true, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -177,21 +138,7 @@ public partial class OkexSocketClient
         Action<OkexAlgoOrder> onData,
         CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexAlgoOrder>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, new OkexSocketRequestArgument
-        {
-            Channel = "orders-algo",
-            InstrumentId = instrumentId,
-            InstrumentType = instrumentType,
-            Underlying = underlying,
-        });
-        return await UnifiedSubscribeAsync(request, null, true, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -223,21 +170,7 @@ public partial class OkexSocketClient
         Action<OkexAlgoOrder> onData,
         CancellationToken ct = default)
     {
-        var internalHandler = new Action<DataEvent<OkexSocketUpdateResponse<IEnumerable<OkexAlgoOrder>>>>(data =>
-        {
-            foreach (var d in data.Data.Data)
-                onData(d);
-        });
-
-
-        var request = new OkexSocketRequest(OkexSocketOperation.Subscribe, new OkexSocketRequestArgument
-        {
-            Channel = "algo-advance",
-            InstrumentId = instrumentId,
-            InstrumentType = instrumentType,
-            Underlying = underlying,
-        });
-        return await UnifiedSubscribeAsync(request, null, true, internalHandler, ct).ConfigureAwait(false);
+        throw new NotImplementedException();
     }
 
     // TODO: Position risk warning

@@ -1,4 +1,5 @@
-﻿using CryptoExchange.Net.Sockets;
+﻿using CryptoExchange.Net.Objects.Sockets;
+using CryptoExchange.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using Okex.Net.Enums;
 using Okex.Net.Objects.Core;

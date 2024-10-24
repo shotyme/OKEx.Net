@@ -1,4 +1,6 @@
-﻿namespace Okex.Net.Converters;
+﻿using CryptoExchange.Net.Converters.JsonNet;
+
+namespace Okex.Net.Converters;
 
 internal class SubAccountTypeConverter : BaseConverter<OkexSubAccountType>
 {

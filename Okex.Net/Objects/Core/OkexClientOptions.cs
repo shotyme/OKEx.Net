@@ -12,11 +12,12 @@ public class OkexClientOptions : RestExchangeOptions
 
     private OkexRestApiClientOptions _unifiedApiOptions = new OkexRestApiClientOptions(OkexApiAddresses.Default.UnifiedAddress)
     {
-        RateLimiters = new List<IRateLimiter>
-        {
-            new RateLimiter()
-            .AddPartialEndpointLimit("/api/v5/trade/order", 60, TimeSpan.FromSeconds(2), null, true, true)
-        }
+        
+        //RateLimiters = new List<IRateLimiter>
+        //{
+        //    new RateLimiter()
+        //    .AddPartialEndpointLimit("/api/v5/trade/order", 60, TimeSpan.FromSeconds(2), null, true, true)
+        //}
     };
 
     public new OkexApiCredentials ApiCredentials

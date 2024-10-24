@@ -2,15 +2,15 @@
 
 public class OkexApiCredentials : ApiCredentials
 {
-    public SecureString PassPhrase { get; }
+    public string PassPhrase { get; }
 
     public OkexApiCredentials(string apiKey, string apiSecret, string apiPassPhrase) : base(apiKey, apiSecret)
     {
-        PassPhrase = apiPassPhrase.ToSecureString();
+        PassPhrase = apiPassPhrase;
     }
 
     public override ApiCredentials Copy()
     {
-        return new OkexApiCredentials(Key!.GetString(), Secret!.GetString(), PassPhrase!.GetString());
+        return new OkexApiCredentials(Key, Secret, PassPhrase);
     }
 }

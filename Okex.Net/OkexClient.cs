@@ -1,4 +1,8 @@
-﻿namespace Okex.Net;
+﻿using CryptoExchange.Net.Clients;
+using CryptoExchange.Net.RateLimiting;
+using CryptoExchange.Net.SharedApis;
+
+namespace Okex.Net;
 
 public partial class OkexClient : BaseRestClient
 {
@@ -201,6 +205,17 @@ public class OkexClientUnifiedApi : RestApiClient
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
         => new OkexAuthenticationProvider((OkexApiCredentials)credentials);
 
+    public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null)
+    {
+        if (tradingMode == TradingMode.Spot)
+            return baseAsset.ToUpperInvariant() + "-" + quoteAsset.ToUpperInvariant();
+
+        if (deliverDate == null)
+            return baseAsset.ToUpperInvariant() + "-" + quoteAsset.ToUpperInvariant() + "-SWAP";
+
+        return baseAsset.ToUpperInvariant() + "-" + quoteAsset.ToUpperInvariant() + "-" + deliverDate.Value.ToString("yyMMdd");
+    }
+
     internal async Task<WebCallResult> ExecuteAsync(Uri uri, HttpMethod method, CancellationToken ct, Dictionary<string, object> parameters = null, bool signed = false, HttpMethodParameterPosition? parameterPosition = null)
     {
         var result = await SendRequestAsync<object>(uri, method, ct, parameters, signed, null, parameterPosition).ConfigureAwait(false);
@@ -211,7 +226,7 @@ public class OkexClientUnifiedApi : RestApiClient
 
     internal async Task<WebCallResult<T>> ExecuteAsync<T>(Uri uri, HttpMethod method, CancellationToken ct, Dictionary<string, object> parameters = null, bool signed = false, int weight = 1, bool ignoreRatelimit = false, HttpMethodParameterPosition? parameterPosition = null) where T : class
     {
-        var result = await SendRequestAsync<T>(uri, method, ct, parameters, signed, null, parameterPosition, requestWeight: weight, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
+        var result = await SendRequestAsync<T>(uri, method, ct, parameters, signed, RequestBodyFormat.Json, parameterPosition, requestWeight: weight, gate: new RateLimitGate("okx")).ConfigureAwait(false);
         if (!result) return result.AsError<T>(result.Error!);
 
         return result.As(result.Data);
@@ -235,30 +250,30 @@ public class OkexClientUnifiedApi : RestApiClient
     public override TimeSpan? GetTimeOffset()
         => TimeSyncState.TimeOffset;
 
-    protected override void WriteParamBody(IRequest request, SortedDictionary<string, object> parameters, string contentType)
-    {
-        if (requestBodyFormat == RequestBodyFormat.Json)
-        {
-            if (parameters.Count == 1 && parameters.Keys.First() == OkexClient.BodyParameterKey)
-            {
-                // Write the parameters as json in the body
-                var stringData = JsonConvert.SerializeObject(parameters[OkexClient.BodyParameterKey]);
-                request.SetContent(stringData, contentType);
-            }
-            else
-            {
-                // Write the parameters as json in the body
-                var stringData = JsonConvert.SerializeObject(parameters);
-                request.SetContent(stringData, contentType);
-            }
-        }
-        else if (requestBodyFormat == RequestBodyFormat.FormData)
-        {
-            // Write the parameters as form data in the body
-            var stringData = parameters.ToFormData();
-            request.SetContent(stringData, contentType);
-        }
-    }
+    //protected override void WriteParamBody(IRequest request, SortedDictionary<string, object> parameters, string contentType)
+    //{
+    //    if (requestBodyFormat == RequestBodyFormat.Json)
+    //    {
+    //        if (parameters.Count == 1 && parameters.Keys.First() == OkexClient.BodyParameterKey)
+    //        {
+    //            // Write the parameters as json in the body
+    //            var stringData = JsonConvert.SerializeObject(parameters[OkexClient.BodyParameterKey]);
+    //            request.SetContent(stringData, contentType);
+    //        }
+    //        else
+    //        {
+    //            // Write the parameters as json in the body
+    //            var stringData = JsonConvert.SerializeObject(parameters);
+    //            request.SetContent(stringData, contentType);
+    //        }
+    //    }
+    //    else if (requestBodyFormat == RequestBodyFormat.FormData)
+    //    {
+    //        // Write the parameters as form data in the body
+    //        var stringData = parameters.ToFormData();
+    //        request.SetContent(stringData, contentType);
+    //    }
+    //}
 
     protected Error ParseErrorResponse(JToken error)
     {

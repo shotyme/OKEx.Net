@@ -137,11 +137,9 @@ public partial class OkexClient
             order.Tag = "c84128021aecBCDE";
             order.ClientOrderId = "c84128021aecBCDE" + RandomString(15);
         }
-        
-        var parameters = new Dictionary<string, object>
-        {
-            { BodyParameterKey, orders },
-        };
+
+        var parameters = new ParameterCollection();
+        parameters.SetBody(orders);
 
         var result = await UnifiedApi.ExecuteAsync<OkexRestApiResponse<IEnumerable<OkexOrderPlaceResponse>>>(UnifiedApi.GetUri(Endpoints_V5_Trade_BatchOrders), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (!result.Success) return result.AsError<IEnumerable<OkexOrderPlaceResponse>>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));
@@ -208,9 +206,9 @@ public partial class OkexClient
     /// <returns></returns>
     public virtual async Task<WebCallResult<IEnumerable<OkexOrderCancelResponse>>> CancelMultipleOrdersAsync(IEnumerable<OkexOrderCancelRequest> orders, CancellationToken ct = default)
     {
-        var parameters = new Dictionary<string, object> {
-            { BodyParameterKey, orders },
-        };
+        var parameters = new ParameterCollection();
+        parameters.SetBody(orders);
+
 
         var result = await UnifiedApi.ExecuteAsync<OkexRestApiResponse<IEnumerable<OkexOrderCancelResponse>>>(UnifiedApi.GetUri(Endpoints_V5_Trade_CancelBatchOrders), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (!result.Success) return result.AsError<IEnumerable<OkexOrderCancelResponse>>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));
@@ -297,9 +295,8 @@ public partial class OkexClient
     /// <returns></returns>
     public virtual async Task<WebCallResult<IEnumerable<OkexOrderAmendResponse>>> AmendMultipleOrdersAsync(IEnumerable<OkexOrderAmendRequest> orders, CancellationToken ct = default)
     {
-        var parameters = new Dictionary<string, object> {
-            { BodyParameterKey, orders },
-        };
+        var parameters = new ParameterCollection();
+        parameters.SetBody(orders);
 
         var result = await UnifiedApi.ExecuteAsync<OkexRestApiResponse<IEnumerable<OkexOrderAmendResponse>>>(UnifiedApi.GetUri(Endpoints_V5_Trade_AmendBatchOrders), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (!result.Success) return result.AsError<IEnumerable<OkexOrderAmendResponse>>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));
@@ -1069,9 +1066,8 @@ public partial class OkexClient
     /// <returns></returns>
     public virtual async Task<WebCallResult<OkexAlgoOrderResponse>> CancelAlgoOrderAsync(IEnumerable<OkexAlgoOrderRequest> orders, CancellationToken ct = default)
     {
-        var parameters = new Dictionary<string, object> {
-            {BodyParameterKey, orders },
-        };
+        var parameters = new ParameterCollection();
+        parameters.SetBody(orders);
 
         var result = await UnifiedApi.ExecuteAsync<OkexRestApiResponse<IEnumerable<OkexAlgoOrderResponse>>>(UnifiedApi.GetUri(Endpoints_V5_Trade_CancelAlgos), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (!result.Success) return result.AsError<OkexAlgoOrderResponse>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));
@@ -1096,9 +1092,8 @@ public partial class OkexClient
     /// <returns></returns>
     public virtual async Task<WebCallResult<OkexAlgoOrderResponse>> CancelAdvanceAlgoOrderAsync(IEnumerable<OkexAlgoOrderRequest> orders, CancellationToken ct = default)
     {
-        var parameters = new Dictionary<string, object> {
-            {BodyParameterKey, orders },
-        };
+        var parameters = new ParameterCollection();
+        parameters.SetBody(orders);
 
         var result = await UnifiedApi.ExecuteAsync<OkexRestApiResponse<IEnumerable<OkexAlgoOrderResponse>>>(UnifiedApi.GetUri(Endpoints_V5_Trade_CancelAdvanceAlgos), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (!result.Success) return result.AsError<OkexAlgoOrderResponse>(new OkexRestApiError(result.Error.Code, result.Error.Message, result.Error.Data));

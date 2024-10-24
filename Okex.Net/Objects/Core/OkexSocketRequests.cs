@@ -1,4 +1,6 @@
-﻿namespace Okex.Net.Objects.Core;
+﻿using CryptoExchange.Net.Converters.JsonNet;
+
+namespace Okex.Net.Objects.Core;
 
 public class OkexSocketRequest
 {
