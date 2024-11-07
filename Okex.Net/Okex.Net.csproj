@@ -77,6 +77,6 @@
 	  <None Include="Icon\icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CryptoExchange.Net" Version="8.0.3" />
+    <PackageReference Include="CryptoExchange.Net" Version="8.2.0" />
   </ItemGroup>
 </Project>
